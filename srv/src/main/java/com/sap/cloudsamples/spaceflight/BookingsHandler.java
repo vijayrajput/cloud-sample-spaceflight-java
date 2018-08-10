@@ -28,6 +28,9 @@ import com.sap.cloud.sdk.service.prov.api.request.UpdateRequest;
 import com.sap.cloud.sdk.service.prov.api.response.ErrorResponse;
 import com.sap.cloud.sdk.service.prov.api.response.ErrorResponseBuilder;
 
+/**
+ * Request handler for <code>BookingService.Bookings</code> entity.
+ */
 public class BookingsHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(BookingsHandler.class);
@@ -42,40 +45,59 @@ public class BookingsHandler {
 	private static final String PROPERTY_BOOKING_ITINERARYID = "Itinerary_ID";
 	private static final String PROPERTY_BOOKING_CUSTOMERID = "Customer_ID";
 
+	/**
+	 * Called before an entity instance is created
+	 */
 	@BeforeCreate(serviceName = BOOKING_SERVICE, entity = ENTITY_BOOKINGS)
 	public BeforeCreateResponse beforeBookingCreate(CreateRequest req, ExtensionHelper helper)
 			throws ODataException, DatasourceException {
 		return beforeUpsert(req.getData(), helper.getHandler(), true);
 	}
 
+	/**
+	 * Called before an entity instance is updated
+	 */
 	@BeforeUpdate(serviceName = BOOKING_SERVICE, entity = ENTITY_BOOKINGS)
 	public BeforeUpdateResponse beforeBookingUpdate(UpdateRequest req, ExtensionHelper helper)
 			throws ODataException, DatasourceException {
 		return beforeUpsert(req.getData(), helper.getHandler(), false);
 	}
 
+	/**
+	 * Handles BeforeCreate and BeforeUpdate of Bookings
+	 */
 	private PreExtensionResponseWithBody beforeUpsert(EntityData reqData, DataSourceHandler dataSource, boolean insert)
 			throws ODataException, DatasourceException {
 		ErrorResponseBuilder errorResponseBuilder = ErrorResponse.getBuilder();
-		boolean error = false;
+		boolean success = true;
 		EntityDataBuilder entityBuilder = EntityData.getBuilder(reqData);
 
-		error |= validateForeignKey(reqData, ENTITY_ITINERARIES, PROPERTY_BOOKING_ITINERARYID, "NoSuchItinerary",
+		// make sure the changed Itinerary is valid, i.e. refers to an existing
+		// Itineraries instance
+		success &= validateForeignKey(reqData, PROPERTY_BOOKING_ITINERARYID, ENTITY_ITINERARIES, "NoSuchItinerary",
 				dataSource, errorResponseBuilder);
-		error |= fetchAndSaveCustomer(reqData, dataSource, errorResponseBuilder);
 
-		if (error) {
+		// get the booking's customer from remote, and store it in the local DB
+		success &= fetchAndSaveCustomer(reqData, dataSource, errorResponseBuilder);
+
+		if (!success) {
 			return new PreExtensionResponseImpl(
 					errorResponseBuilder.setStatusCode(HttpStatus.SC_BAD_REQUEST).response());
 		}
 
 		if (insert) {
-			entityBuilder.addElement(PROPERTY_BOOKING_BOOKINGNO, computeBookingNo());
+			// compute and set a new booking number
+			entityBuilder.addElement(PROPERTY_BOOKING_BOOKINGNO, computeBookingNumber());
 		}
 
 		return new PreExtensionResponseBuilderWithBody(entityBuilder.buildEntityData(ENTITY_BOOKINGS)).response();
 	}
 
+	/**
+	 * Retrieves the booking's customer from remote, and stores it in the local DB
+	 * 
+	 * @return <code>false</code> in case of errors
+	 */
 	private static boolean fetchAndSaveCustomer(EntityData reqData, DataSourceHandler dataSource,
 			ErrorResponseBuilder errorResponseBuilder) {
 		if (reqData.contains(PROPERTY_BOOKING_CUSTOMERID)) {
@@ -85,35 +107,41 @@ public class BookingsHandler {
 				CustomersReplicator.saveCustomer(customer, dataSource);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-				return addErrorMessage(errorResponseBuilder, PROPERTY_BOOKING_CUSTOMERID, "NoSuchCustomer", custId);
+				addErrorMessage(errorResponseBuilder, PROPERTY_BOOKING_CUSTOMERID, "NoSuchCustomer", custId);
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
-	private static boolean validateForeignKey(EntityData reqData, String entityName, String fkProperty,
+	/**
+	 * Checks if the given foreign key of an entity exists on the DB
+	 *
+	 * @return <code>false</code> in case of errors
+	 */
+	private static boolean validateForeignKey(EntityData reqData, String fkProperty, String targetEntity,
 			String messageKey, DataSourceHandler dataSource, ErrorResponseBuilder responseBuilder)
 			throws DatasourceException {
 		if (reqData.contains(fkProperty)) {
 			Object value = reqData.getElementValue(fkProperty);
-			EntityData entity = dataSource.executeRead(entityName, Collections.singletonMap(PROPERTY_ID, value),
+			EntityData entity = dataSource.executeRead(targetEntity, Collections.singletonMap(PROPERTY_ID, value),
 					Collections.singletonList(PROPERTY_ID));
 			if (entity == null) {
-				return addErrorMessage(responseBuilder, fkProperty, messageKey, value);
+				addErrorMessage(responseBuilder, fkProperty, messageKey, value);
+				return false;
 			}
 		}
-		return false;
-	}
-
-	private static boolean addErrorMessage(ErrorResponseBuilder responseBuilder, String target, String messageKey,
-			Object... messageArgs) {
-		responseBuilder.setMessage(messageKey, messageArgs).addErrorDetail(messageKey, target, messageArgs);
 		return true;
 	}
 
-	private static String computeBookingNo() {
-		String no = DateTimeFormatter.BASIC_ISO_DATE.format(LocalDate.now());
-		no += "/" + RandomStringUtils.randomAlphanumeric(5).toUpperCase(Locale.ENGLISH);
+	private static void addErrorMessage(ErrorResponseBuilder responseBuilder, String target, String messageKey,
+			Object... messageArgs) {
+		responseBuilder.setMessage(messageKey, messageArgs).addErrorDetail(messageKey, target, messageArgs);
+	}
+
+	private static String computeBookingNumber() {
+		String no = DateTimeFormatter.BASIC_ISO_DATE.format(LocalDate.now()); // e.g. 20180810
+		no += "/" + RandomStringUtils.randomAlphanumeric(5).toUpperCase(Locale.ENGLISH); // short random string
 		return no;
 	}
 

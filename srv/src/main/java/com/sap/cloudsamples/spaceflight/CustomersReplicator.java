@@ -24,13 +24,28 @@ import com.sap.cloud.sdk.service.prov.api.response.OperationResponse;
 import com.sap.cloudsamples.spaceflight.s4.BusinessPartnerQuery;
 import com.sap.cloudsamples.spaceflight.s4.BusinessPartnerRead;
 
+/**
+ * Helper class for fetching customers from remote
+ */
 public class CustomersReplicator {
 
+	/**
+	 * The destination we use to contact the remote end-point. Must be configured in
+	 * Cloud Cockpit.
+	 */
+	private static final String DESTINATION_NAME_S4 = "ErpQueryEndpoint";
+
 	private static final int MAX_NO_TO_REPLICATE = 50; // restrict number of records to fetch
+	private static final String CUSTOMERS_ENTITY = "teched.flight.trip.Customers";
 	private static final Logger logger = LoggerFactory.getLogger(CustomersReplicator.class);
 
+	/**
+	 * Called on execution of the <code>fetchCustomers</code> function
+	 */
 	@Function(Name = "fetchCustomers")
-	public OperationResponse fetchCustomers(OperationRequest opReq, ExtensionHelper extHelper) throws ODataException {
+	public OperationResponse fetchAndStoreCustomers(OperationRequest opReq, ExtensionHelper extHelper)
+			throws ODataException {
+		// fetch from remote
 		List<Customer> customers = fetchCustomers(true, -1, -1);
 
 		// save to local DB
@@ -41,8 +56,11 @@ public class CustomersReplicator {
 		return OperationResponse.setSuccess().setPrimitiveData(Collections.singletonList(customers.size())).response();
 	}
 
+	/**
+	 * Fetches one customer
+	 */
 	static Customer fetchCustomer(String id, boolean includeAddressData) {
-		BusinessPartner bp = new BusinessPartnerRead(new ErpConfigContext(), id).execute();
+		BusinessPartner bp = new BusinessPartnerRead(new ErpConfigContext(DESTINATION_NAME_S4), id).execute();
 		Customer customer = Customer.fromBusinessPartner(bp);
 		if (includeAddressData) {
 			fetchAddressData(customer);
@@ -50,9 +68,12 @@ public class CustomersReplicator {
 		return customer;
 	}
 
+	/**
+	 * Fetches multiple customers
+	 */
 	static List<Customer> fetchCustomers(boolean includeAddressData, int top, int skip) {
 		BusinessPartnerQuery query = new BusinessPartnerQuery( //
-				new ErpConfigContext(), //
+				new ErpConfigContext(DESTINATION_NAME_S4), //
 				top >= 0 ? top : MAX_NO_TO_REPLICATE, //
 				skip >= 0 ? skip : -1, //
 				Arrays.asList( // properties to fetch
@@ -77,16 +98,43 @@ public class CustomersReplicator {
 		return customers;
 	}
 
+	/**
+	 * Stores the given customer in the local DB
+	 */
 	static Customer saveCustomer(Customer customer, DataSourceHandler dataSource) {
 		try {
 			logger.info("Storing " + customer.getId());
-			upsert(customer, Customer.ENTITY_NAME, Customer.ID_PROP, customer.getId(), dataSource);
+			upsert(customer, CUSTOMERS_ENTITY, Customer.ID_PROP, customer.getId(), dataSource);
 			return customer;
 		} catch (DatasourceException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
+	/**
+	 * Fetches additional address data for the given customer
+	 */
+	private static Customer fetchAddressData(Customer customer) {
+		try {
+			logger.info("Fetching address for " + customer.getId());
+			BusinessPartner bp = customer.getBusinessPartner();
+			List<BusinessPartnerAddress> addresses = bp.getBusinessPartnerAddressOrFetch(); // potential remote call
+			for (BusinessPartnerAddress address : addresses) {
+				List<AddressEmailAddress> emailAddresses = address.getEmailAddressOrFetch(); // potential remote call
+				emailAddresses.stream() //
+						.filter(addr -> addr.getEmailAddress() != null && addr.getEmailAddress().length() > 0) //
+						.findFirst() //
+						.ifPresent(addr -> customer.setEmail(addr.getEmailAddress())); // set email in customer
+			}
+		} catch (ODataException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return customer;
+	}
+
+	/**
+	 * Either insert or update the given entity
+	 */
 	private static void upsert(Object pojo, String entityName, String idProp, String id, DataSourceHandler dataSource)
 			throws DatasourceException {
 		Map<String, Object> keys = Collections.singletonMap(idProp, id);
@@ -96,24 +144,6 @@ public class CustomersReplicator {
 		} else {
 			dataSource.executeInsert(pojo, entityName, false);
 		}
-	}
-
-	private static Customer fetchAddressData(Customer customer) {
-		try {
-			logger.info("Fetching address for " + customer.getId());
-			BusinessPartner bp = customer.businessPartner;
-			List<BusinessPartnerAddress> addresses = bp.getBusinessPartnerAddressOrFetch();
-			for (BusinessPartnerAddress address : addresses) {
-				List<AddressEmailAddress> emailAddresses = address.getEmailAddressOrFetch();
-				emailAddresses.stream() //
-						.filter(addr -> addr.getEmailAddress() != null && addr.getEmailAddress().length() > 0) //
-						.findFirst() //
-						.ifPresent(addr -> customer.setEmail(addr.getEmailAddress()));
-			}
-		} catch (ODataException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return customer;
 	}
 
 }

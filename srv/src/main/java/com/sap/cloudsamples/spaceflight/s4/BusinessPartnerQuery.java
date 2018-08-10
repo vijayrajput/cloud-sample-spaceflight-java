@@ -14,6 +14,9 @@ import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.Busin
 import com.sap.cloud.sdk.s4hana.datamodel.odata.services.DefaultBusinessPartnerService;
 import com.sap.cloud.sdk.service.prov.api.request.OrderByExpression;
 
+/**
+ * Helper to query {@link BusinessPartner}s
+ */
 public class BusinessPartnerQuery extends ErpCommand<List<BusinessPartner>> {
 
 	private final int top;
@@ -38,7 +41,6 @@ public class BusinessPartnerQuery extends ErpCommand<List<BusinessPartner>> {
 
 	@Override
 	protected List<BusinessPartner> run() {
-
 		BusinessPartnerFluentHelper service = new DefaultBusinessPartnerService().getAllBusinessPartner();
 
 		orderByProperties.stream()
@@ -49,16 +51,13 @@ public class BusinessPartnerQuery extends ErpCommand<List<BusinessPartner>> {
 
 		if (filter != null)
 			service.filter(filter);
-
 		if (skip > 0)
 			service.skip(skip);
-
 		if (top > 0)
 			service.top(top);
 
 		try {
 			return service.execute(erpConfigContext);
-
 		} catch (final ODataException e) {
 			throw new HystrixBadRequestException(e.getMessage(), e);
 		}

@@ -8,6 +8,9 @@ import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.Busin
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartnerByKeyFluentHelper;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.services.DefaultBusinessPartnerService;
 
+/**
+ * Helper to read a {@link BusinessPartner}
+ */
 public class BusinessPartnerRead extends ErpCommand<BusinessPartner> {
 
 	private final ErpConfigContext erpConfigContext;

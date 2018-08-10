@@ -3,17 +3,21 @@ package com.sap.cloudsamples.spaceflight;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartner;
 import com.sap.cloud.sdk.service.prov.api.annotations.Key;
 
+/**
+ * DAO class for the Customers entity, holding ID, name, and email
+ */
 public class Customer {
 
 	static final String ID_PROP = "ID";
 	static final String NAME_PROP = "Name";
 	static final String EMAIL_PROP = "Email";
 
-	static final String ENTITY_NAME = "teched.flight.trip.Customers";
-
+	/**
+	 * Creates an instance out of a remote {@link BusinessPartner}
+	 */
 	public static Customer fromBusinessPartner(BusinessPartner bp) {
 		Customer customer = new Customer(bp.getBusinessPartner(), bp.getBusinessPartnerFullName());
-		customer.businessPartner = bp;
+		customer.businessPartner = bp; // transiently store BP along with the Customer for convenience
 		return customer;
 	}
 
@@ -21,13 +25,9 @@ public class Customer {
 	private volatile String ID;
 	private volatile String Name;
 	private volatile String Email;
-
 	transient volatile BusinessPartner businessPartner;
 
-	public Customer() {
-	}
-
-	public Customer(String id, String name) {
+	Customer(String id, String name) {
 		this.ID = id;
 		this.Name = name;
 	}
@@ -54,6 +54,10 @@ public class Customer {
 
 	public void setEmail(String email) {
 		this.Email = email;
+	}
+
+	public BusinessPartner getBusinessPartner() {
+		return businessPartner;
 	}
 
 	@Override

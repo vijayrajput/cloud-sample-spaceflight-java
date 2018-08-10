@@ -10,30 +10,39 @@ import com.sap.cloud.sdk.service.prov.api.request.ReadRequest;
 import com.sap.cloud.sdk.service.prov.api.response.QueryResponse;
 import com.sap.cloud.sdk.service.prov.api.response.ReadResponse;
 
-public class CustomersHandler {
+/**
+ * Request handler for <code>BookingService.CustomersRemote</code> entity.
+ */
+public class CustomersRemoteHandler {
 
 	private static final String CUSTOMERSREMOTE = "CustomersRemote";
 
 	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * Called on read of a single customer
+	 */
 	@Read(serviceName = BookingsHandler.BOOKING_SERVICE, entity = CUSTOMERSREMOTE)
 	public ReadResponse readSingleCustomerByKey(ReadRequest readRequest) throws ODataException {
+		// fetch the given customer from remote
 		String id = String.valueOf(readRequest.getKeys().get(Customer.ID_PROP));
 		Customer customer = CustomersReplicator.fetchCustomer(id, true);
 
-		ReadResponse readResponse = ReadResponse.setSuccess().setData(customer).response();
-		return readResponse;
+		return ReadResponse.setSuccess().setData(customer).response();
 	}
 
+	/**
+	 * Called on query for a set of customers
+	 */
 	@Query(serviceName = BookingsHandler.BOOKING_SERVICE, entity = CUSTOMERSREMOTE)
 	public QueryResponse queryCustomers(QueryRequest qryRequest) throws ODataException {
+		// fetch the queried set of customers from remote
 		boolean includeAddress = qryRequest.getSelectProperties().contains(Customer.EMAIL_PROP);
 		int top = qryRequest.getTopOptionValue();
 		int skip = qryRequest.getSkipOptionValue();
 		List<Customer> customers = CustomersReplicator.fetchCustomers(includeAddress, top, skip);
 
-		QueryResponse queryResponse = QueryResponse.setSuccess().setData(customers).response();
-		return queryResponse;
+		return QueryResponse.setSuccess().setData(customers).response();
 	}
 
 }
