@@ -56,10 +56,6 @@ public class Customer {
 		this.Email = email;
 	}
 
-	public BusinessPartner getBusinessPartner() {
-		return businessPartner;
-	}
-
 	@Override
 	public String toString() {
 		return "Customer [id=" + ID + ", name=" + Name + ", email=" + Email + "]";

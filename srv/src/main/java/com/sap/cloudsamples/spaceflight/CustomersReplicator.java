@@ -117,7 +117,7 @@ public class CustomersReplicator {
 	private static Customer fetchAddressData(Customer customer) {
 		try {
 			logger.info("Fetching address for " + customer.getId());
-			BusinessPartner bp = customer.getBusinessPartner();
+			BusinessPartner bp = customer.businessPartner;
 			List<BusinessPartnerAddress> addresses = bp.getBusinessPartnerAddressOrFetch(); // potential remote call
 			for (BusinessPartnerAddress address : addresses) {
 				List<AddressEmailAddress> emailAddresses = address.getEmailAddressOrFetch(); // potential remote call
