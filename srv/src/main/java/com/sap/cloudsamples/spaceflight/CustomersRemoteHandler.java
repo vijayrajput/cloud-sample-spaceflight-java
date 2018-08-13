@@ -1,5 +1,6 @@
 package com.sap.cloudsamples.spaceflight;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.sap.cloud.sdk.odatav2.connectivity.ODataException;
@@ -26,7 +27,9 @@ public class CustomersRemoteHandler {
 	public ReadResponse readSingleCustomerByKey(ReadRequest readRequest) throws ODataException {
 		// fetch the given customer from remote
 		String id = String.valueOf(readRequest.getKeys().get(Customer.ID_PROP));
-		Customer customer = CustomersReplicator.fetchCustomer(id, true);
+
+		Customer customer = new Customer(id, "<n/a>"); // REMOVE
+//		Customer customer = CustomersReplicator.fetchCustomer(id, true);
 
 		return ReadResponse.setSuccess().setData(customer).response();
 	}
@@ -40,7 +43,9 @@ public class CustomersRemoteHandler {
 		boolean includeAddress = qryRequest.getSelectProperties().contains(Customer.EMAIL_PROP);
 		int top = qryRequest.getTopOptionValue();
 		int skip = qryRequest.getSkipOptionValue();
-		List<Customer> customers = CustomersReplicator.fetchCustomers(includeAddress, top, skip);
+
+		List<Customer> customers = Collections.emptyList(); // REMOVE
+//		List<Customer> customers = CustomersReplicator.fetchCustomers(includeAddress, top, skip);
 
 		return QueryResponse.setSuccess().setData(customers).response();
 	}

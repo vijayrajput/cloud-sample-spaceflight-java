@@ -3,26 +3,26 @@ using BookingService as srv from './booking-service';
 // ---------------------------------------------------------------------------------------------------------------------
 // Customers
 // ---------------------------------------------------------------------------------------------------------------------
-annotate srv.Customers with {
-  ID
-    @title: 'ID'
-    @UI.TextArrangement: #TextOnly;
-  Name  @title: 'Name';
-  Email
-    @title: 'Email'
-    @Common.FieldControl: #ReadOnly;
-};
-annotate srv.Customers with @(
-  UI.Identification:  [ {$Type: 'UI.DataField', Value: Name} ]
-);
-annotate srv.CustomersRemote with {
-  ID    @title: 'ID';
-  Name  @title: 'Name';
-  Email @title: 'Email';
-};
-annotate srv.CustomersRemote with @(
-  UI.Identification:  [ {$Type: 'UI.DataField', Value: Name} ]
-);
+// annotate srv.Customers with {
+//   ID
+//     @title: 'ID'
+//     @UI.TextArrangement: #TextOnly;
+//   Name  @title: 'Name';
+//   Email
+//     @title: 'Email'
+//     @Common.FieldControl: #ReadOnly;
+// };
+// annotate srv.Customers with @(
+//   UI.Identification:  [ {$Type: 'UI.DataField', Value: Name} ]
+// );
+// annotate srv.CustomersRemote with {
+//   ID    @title: 'ID';
+//   Name  @title: 'Name';
+//   Email @title: 'Email';
+// };
+// annotate srv.CustomersRemote with @(
+//   UI.Identification:  [ {$Type: 'UI.DataField', Value: Name} ]
+// );
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Itineraries
@@ -57,18 +57,19 @@ annotate srv.Bookings with {
       Text: {$value: Itinerary.Name, "@UI.TextArrangement": #TextOnly},
       ValueList: { entity: 'Itineraries' }
     };
-  Customer
-    @Common: {
-      Label: 'Customer',
-      FieldControl: #Mandatory,
-      Text: {$value: Customer.Name, "@UI.TextArrangement": #TextOnly},
-      ValueList: { entity: 'CustomersRemote' }
-    };
+  // Customer
+  //   @Common: {
+  //     Label: 'Customer',
+  //     FieldControl: #Mandatory,
+  //     Text: {$value: Customer.Name, "@UI.TextArrangement": #TextOnly},
+  //     ValueList: { entity: 'CustomersRemote' }
+  //   };
 };
 annotate srv.Bookings with @(
   // for ListPage (list of bookings)
   UI.LineItem: [
-    {$Type: 'UI.DataField', Value: Customer.Name, Label: 'Customer'},
+    // {$Type: 'UI.DataField', Value: Customer.Name, Label: 'Customer'},
+    {$Type: 'UI.DataField', Value: CustomerName, Label: 'Customer'},  // REMOVE
     {$Type: 'UI.DataField', Value: Itinerary.Name, Label : 'Trip'},
     {$Type: 'UI.DataField', Value: DateOfTravel},
     {$Type: 'UI.DataField', Value: NumberOfPassengers},
@@ -78,7 +79,8 @@ annotate srv.Bookings with @(
   // for object page (booking details)
   UI.HeaderInfo: {
     Title: { Value: Itinerary.Name },
-    Description: { Value: Customer.Name },
+    // Description: { Value: Customer.Name },
+    Description: { Value: CustomerName }, // REMOVE
     TypeName: 'Booking',
     TypeNamePlural: 'Bookings'
   },
@@ -115,8 +117,10 @@ annotate srv.Bookings with @(
   UI.FieldGroup#Customer: {
     Label: 'Customer',
     Data: [
-      {$Type: 'UI.DataField', Value: Customer_ID, Label: 'Customer'}, // customer ID from external service
-      {$Type: 'UI.DataField', Value: Customer.Email},
+      // {$Type: 'UI.DataField', Value: Customer_ID, Label: 'Customer'},
+      // {$Type: 'UI.DataField', Value: Customer.Email},
+      {$Type: 'UI.DataField', Value: CustomerName},  // REMOVE
+      {$Type: 'UI.DataField', Value: EmailAddress},  // REMOVE
       {$Type: 'UI.DataField', Value: NumberOfPassengers}
     ]
   }
