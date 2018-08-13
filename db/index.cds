@@ -1,6 +1,5 @@
 // *********************************************************************************************************************
-// Automatically include the defintions in flight-model.cds and space-model.cds
+// Automatically include the defintions from spaceflight-model
 // *********************************************************************************************************************
 
-using from './flight-model';
-using from './space-model';
+using from 'spaceflight-model/db';

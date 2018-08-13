@@ -1,17 +1,14 @@
 using BookingService as srv from './booking-service';
 
-annotate srv.Itineraries with {
-  ID   @UI.TextArrangement: #TextOnly;
-};
-annotate srv.Itineraries with @(
-  UI.Identification:  [ {$Type: 'UI.DataField', Value: Name} ]
-);
-
 annotate srv.Bookings with {
   ID
     @title: 'Id';
   BookingNo
     @title: 'Booking number';
+  createdAt
+    @title: 'Booking date';
+  createdBy
+    @title: 'Booked by';
   DateOfTravel
     @title: 'Travel date'
     @Common.FieldControl: #Mandatory;
@@ -21,7 +18,7 @@ annotate srv.Bookings with {
     @title: 'Cost'
     @Common.FieldControl: #Mandatory;
   CustomerName
-    @title: 'Customer'
+    @title: 'Customer Name'
     @Common.FieldControl: #Mandatory;
   EmailAddress
     @title: 'Email'
@@ -70,7 +67,9 @@ annotate srv.Bookings with @(
   UI.FieldGroup#HeaderInfo: {
     Label: 'Header Info',
     Data: [
-      {$Type: 'UI.DataField', Value: BookingNo}
+      {$Type: 'UI.DataField', Value: BookingNo},
+      {$Type: 'UI.DataField', Value: createdAt},
+      {$Type: 'UI.DataField', Value: createdBy}
     ]
   },
   UI.FieldGroup#GeneralInfo: {
