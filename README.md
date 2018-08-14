@@ -73,14 +73,7 @@ Stay tuned... Caching coming soon...
 ## Exercise 08: Bonus 1 - I18N
 Extract some texts
 
-Deploy
+## License
 
-Change browser language, see effect
-
-## Exersice 07: Bonus 2 - Authentication
-
-UAA binding
-
-Effect: logon needed
-
-## Exercise  Bonus 3 - Switch destination
+Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+This project is licensed under the Apache Software License, Version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
