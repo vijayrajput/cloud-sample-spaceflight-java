@@ -13,7 +13,7 @@ srv/src/main/resources/edmx/
 gen/
 imports/
 node/
-node_modules/
+#node_modules/
 target/
 _out/
 dist/
