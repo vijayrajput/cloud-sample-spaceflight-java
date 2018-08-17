@@ -3,6 +3,8 @@ using BookingService as srv from './booking-service';
 annotate srv.Bookings with {
   ID
     @title: 'Id';
+  BookingNo
+    @title: 'Booking number';
   createdAt
     @title: 'Booking date';
   createdBy
@@ -65,6 +67,7 @@ annotate srv.Bookings with @(
   UI.FieldGroup#HeaderInfo: {
     Label: 'Header Info',
     Data: [
+      {$Type: 'UI.DataField', Value: BookingNo},
       {$Type: 'UI.DataField', Value: createdAt},
       {$Type: 'UI.DataField', Value: createdBy}
     ]
