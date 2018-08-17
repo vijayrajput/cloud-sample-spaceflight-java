@@ -6,8 +6,8 @@
     "__spaceflight-model": "https://github.com/chgeo/test"
   },
   "scripts": {
-    "__build": "cds build --clean && reuseTableData",
-    "build": "cds build --clean"
+    "__build": "cds build --clean && reuseTableData"
+    , "build": "cds build --clean"
   },
   "license": "ISC"
 }
