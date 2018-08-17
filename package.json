@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "dependencies": {
     "@sap/cds": "2.x",
-    "__spaceflight-model": "https://github.com/chgeo/test"
+    "spaceflight-model": "https://github.com/chgeo/test"
   },
   "scripts": {
     "build": "cds build --clean && reuseTableData"
