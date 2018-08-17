@@ -3,22 +3,11 @@
   "version": "0.1.0",
   "dependencies": {
     "@sap/cds": "2.x",
-    "__spaceflight-model": "git://github.wdf.sap.corp/te18/cloud-samples-spaceflight"
-  },
-  "devDependencies": {
-    "npm-watch": "^0.3.0"
-  },
-  "watch": {
-    "build": {
-      "patterns": ["db", "srv"],
-      "extensions": "cds",
-      "inherit": true
-    }
+    "__spaceflight-model": "https://github.com/SAP/cloud-samples-spaceflight"
   },
   "scripts": {
     "__build": "cds build --clean && reuseTableData",
-    "build": "cds build --clean",
-    "watch": "npm-watch"
+    "build": "cds build --clean"
   },
   "license": "ISC"
 }
