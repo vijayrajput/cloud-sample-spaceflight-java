@@ -29,7 +29,7 @@ public class CustomersReplicator {
 	 * The destination we use to contact the remote end-point. Must be configured in
 	 * Cloud Cockpit.
 	 */
-	private static final String DESTINATION_NAME_S4 = "ErpQueryEndpoint_local";
+	private static final String DESTINATION_NAME_S4 = "ErpQueryEndpoint";
 
 	private static final int MAX_NO_TO_REPLICATE = 50; // restrict number of records to fetch
 	private static final String CUSTOMERS_ENTITY = "teched.flight.trip.Customers";
@@ -60,7 +60,7 @@ public class CustomersReplicator {
 						BusinessPartner.BUSINESS_PARTNER_FULL_NAME.getFieldName() //
 				), //
 				Collections.emptyList(), //
-				null
+				BusinessPartner.IS_NATURAL_PERSON.eq("X") // only fetch natural persons
 		);
 
 		// fetch basic BP data from remote
