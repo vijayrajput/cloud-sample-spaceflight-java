@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "dependencies": {
     "@sap/cds": "2.x",
-    "__spaceflight-model": "https://github.com/chgeo/test"
+    "__spaceflight-model": "https://github.com/SAP/cloud-sample-spaceflight"
   },
   "scripts": {
+    "preinstall": "[ -f .netrc ] && cp .netrc $HOME || echo 'No .netrc'",
+    "postinstall": "rm -f $HOME/.netrc",
     "__build": "cds build --clean && reuseTableData"
     , "build": "cds build --clean"
   },
