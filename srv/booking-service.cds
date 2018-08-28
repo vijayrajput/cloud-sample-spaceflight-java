@@ -1,0 +1,1 @@
+using BookingService from 'spaceflight-model/srv';

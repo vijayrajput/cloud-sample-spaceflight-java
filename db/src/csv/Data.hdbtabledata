@@ -1,0 +1,29 @@
+{
+	"format_version": 1,
+	"imports": [{
+		"target_table": "TECHED_FLIGHT_TRIP_BOOKINGS",
+		"source_data": {
+			"data_type": "CSV",
+			"file_name": "bookings.csv",
+			"has_header": true
+		},
+		"import_settings": {
+			"import_columns": ["ID", "BOOKINGNO", "CREATEDAT", "CREATEDBY", "NUMBEROFPASSENGERS", "DATEOFTRAVEL", "COST", "CUSTOMERNAME", "EMAILADDRESS",
+				"ITINERARY_ID"
+			],
+			"include_filter": []
+		},
+		"column_mappings": {
+			"ID": "ID",
+			"BOOKINGNO": "BookingNo",
+			"CREATEDAT": "createdAt",
+			"CREATEDBY": "createdBy",
+			"NUMBEROFPASSENGERS": "NumberOfPassengers",
+			"DATEOFTRAVEL": "DateOfTravel",
+			"COST": "Cost",
+			"CUSTOMERNAME": "CustomerName",
+			"EMAILADDRESS": "EmailAddress",
+			"ITINERARY_ID": "Itinerary_ID"
+		}
+	}]
+}
