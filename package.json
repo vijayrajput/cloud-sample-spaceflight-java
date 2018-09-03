@@ -8,5 +8,5 @@
   "scripts": {
     "__build": "cds build --clean && reuseTableData"
   },
-  "license": "ISC"
+  "license": "SEE LICENSE IN LICENSE"
 }
