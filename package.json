@@ -2,13 +2,11 @@
   "name": "spaceflight",
   "version": "0.1.0",
   "dependencies": {
-    "@sap/cds": "2.x",
+    "@sap/cds": "^2.8",
     "spaceflight-model": "https://github.com/SAP/cloud-sample-spaceflight"
   },
   "scripts": {
-  	"preinstall": "[ -f .netrc ] && cp .netrc $HOME || echo 'No .netrc'",
-  	"postinstall": "rm -f $HOME/.netrc",
     "build": "cds build --clean && reuseTableData"
   },
-  "license": "ISC"
+  "license": "SEE LICENSE IN LICENSE"
 }
