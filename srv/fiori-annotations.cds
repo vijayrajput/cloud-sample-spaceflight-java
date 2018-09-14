@@ -68,7 +68,8 @@ annotate srv.Bookings with {
 annotate srv.Bookings with @(
   // for ListPage (list of bookings)
   UI.LineItem: [
-    {$Type: 'UI.DataField', Value: CustomerName, Label: 'Customer'},
+    // {$Type: 'UI.DataField', Value: Customer.Name, Label: 'Customer'},
+    {$Type: 'UI.DataField', Value: CustomerName, Label: 'Customer'},  // REMOVE
     {$Type: 'UI.DataField', Value: Itinerary.Name, Label : 'Trip'},
     {$Type: 'UI.DataField', Value: DateOfTravel},
     {$Type: 'UI.DataField', Value: NumberOfPassengers},
@@ -78,7 +79,8 @@ annotate srv.Bookings with @(
   // for object page (booking details)
   UI.HeaderInfo: {
     Title: { Value: Itinerary.Name },
-    Description: { Value: CustomerName },
+    // Description: { Value: Customer.Name },
+    Description: { Value: CustomerName }, // REMOVE
     TypeName: 'Booking',
     TypeNamePlural: 'Bookings'
   },
@@ -116,8 +118,9 @@ annotate srv.Bookings with @(
     Label: 'Customer',
     Data: [
       // {$Type: 'UI.DataField', Value: Customer_ID, Label: 'Customer'},
+      // {$Type: 'UI.DataField', Value: Customer.Email},
       {$Type: 'UI.DataField', Value: CustomerName},  // REMOVE
-      {$Type: 'UI.DataField', Value: EmailAddress},
+      {$Type: 'UI.DataField', Value: EmailAddress},  // REMOVE
       {$Type: 'UI.DataField', Value: NumberOfPassengers}
     ]
   }
