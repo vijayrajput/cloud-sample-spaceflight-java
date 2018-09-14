@@ -1,13 +1,35 @@
 using teched.flight.trip as flight from '../db';
-using BookingService from 'spaceflight-model/srv';
+using teched.space.trip  as space from 'spaceflight-model/db';
 
-// ---------------------------------------------------------------------------------------------------------------------
-// Add projections on Customers to BookingService
-// ---------------------------------------------------------------------------------------------------------------------
-extend service BookingService with {
+service BookingService {
 
-  entity Customers as projection on flight.Customers;
+    // ---------------------------------------------------------------------------------------------------------------------
+    // Fill our existing CustomerName and EmailAddress fields
+    // from the new .Customer association
+    // ---------------------------------------------------------------------------------------------------------------------
+    entity Bookings    as projection on flight.Bookings {
+        *
+        , Customer.Name  as CustomerName,
+          Customer.Email as EmailAddress
+    };
 
-  @cds.persistence.skip
-  entity CustomersRemote as projection on flight.CustomersRemote;
+    // ---------------------------------------------------------------------------------------------------------------------
+    // Add projections on Customers
+    // ---------------------------------------------------------------------------------------------------------------------
+    entity Customers as projection on flight.Customers;
+    entity CustomersRemote as projection on flight.CustomersRemote;
+
+
+    entity Itineraries as projection on flight.Itineraries;
+
+    @readonly entity EarthRoutes   as projection on flight.EarthRoutes;
+    @readonly entity Airports      as projection on flight.Airports;
+    @readonly entity Airlines      as projection on flight.Airlines;
+    @readonly entity AircraftCodes as projection on flight.AircraftCodes;
+
+    @readonly entity SpaceRoutes as projection on space.SpaceRoutes;
+    @readonly entity Spaceports  as projection on space.Spaceports;
+    @readonly entity Spacelines  as projection on space.SpaceFlightCompanies;
+    @readonly entity Planets     as projection on space.AstronomicalBodies;
+
 }
