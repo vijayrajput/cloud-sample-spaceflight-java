@@ -1,1 +1,1 @@
-See the [README file in the master branch](/SAP/cloud-sample-spaceflight-java/blob/master/README.md).
+See the [README file in the master branch](https://github.com/SAP/cloud-sample-spaceflight-java).
