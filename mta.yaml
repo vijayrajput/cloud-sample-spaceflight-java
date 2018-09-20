@@ -16,6 +16,8 @@ modules:
    path: srv
    parameters:
       memory: 768M
+   properties:
+      ALLOW_MOCKED_AUTH_HEADER: true   # allows running w/o UAA, not for productive use
    provides:
     - name: srv_api
       properties:
