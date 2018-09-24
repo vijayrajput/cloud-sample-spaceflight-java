@@ -2,11 +2,9 @@
   "name": "spaceflight",
   "version": "0.1.0",
   "dependencies": {
-    "@sap/cds": "^2.8",
-    "spaceflight-model__": "https://github.com/SAP/cloud-sample-spaceflight"
+    "@sap/cds": "2.8.1"
   },
   "scripts": {
-    "__build": "cds build --clean && reuseTableData"
   },
   "license": "SEE LICENSE IN LICENSE"
 }
