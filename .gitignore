@@ -20,7 +20,7 @@ target/
 _out/
 dist/
 .DS_Store
-connection.properties
+srv/src/main/resources/connection.properties
 metadata.xml
 .cds_gen.log
 default-env.json

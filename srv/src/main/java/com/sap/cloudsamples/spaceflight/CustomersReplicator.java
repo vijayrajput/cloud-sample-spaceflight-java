@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sap.cloud.sdk.odatav2.connectivity.ODataException;
-import com.sap.cloud.sdk.s4hana.connectivity.ErpConfigContext;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.AddressEmailAddress;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartner;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartnerAddress;
@@ -24,13 +23,6 @@ import com.sap.cloudsamples.spaceflight.s4.BusinessPartnerRead;
  * Helper class for fetching customers from remote
  */
 public class CustomersReplicator {
-
-	/**
-	 * The destination we use to contact the remote end-point. Must be configured in
-	 * Cloud Cockpit.
-	 */
-	private static final String DESTINATION_NAME_S4 = "ErpQueryEndpoint";
-
 	private static final int MAX_NO_TO_REPLICATE = 50; // restrict number of records to fetch
 	private static final String CUSTOMERS_ENTITY = "teched.flight.trip.Customers";
 	private static final Logger logger = LoggerFactory.getLogger(CustomersReplicator.class);
@@ -39,7 +31,7 @@ public class CustomersReplicator {
 	 * Fetches one customer
 	 */
 	static Customer fetchCustomer(String id, boolean includeAddressData) {
-		BusinessPartner bp = new BusinessPartnerRead(new ErpConfigContext(DESTINATION_NAME_S4), id).execute();
+		BusinessPartner bp = new BusinessPartnerRead(id).execute();
 		Customer customer = Customer.fromBusinessPartner(bp);
 		if (includeAddressData) {
 			fetchAddressData(customer);
@@ -52,7 +44,6 @@ public class CustomersReplicator {
 	 */
 	static List<Customer> fetchCustomers(boolean includeAddressData, int top, int skip) {
 		BusinessPartnerQuery query = new BusinessPartnerQuery( //
-				new ErpConfigContext(DESTINATION_NAME_S4), //
 				top >= 0 ? top : MAX_NO_TO_REPLICATE, //
 				skip >= 0 ? skip : -1, //
 				Arrays.asList( // properties to fetch
