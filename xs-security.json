@@ -1,0 +1,18 @@
+{
+  "description": "Security profile of called application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.spaceflightadmin",
+      "description": "spaceflightadmin"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "spaceflightadmin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.spaceflightadmin"
+      ]
+    }
+  ]
+}

@@ -63,6 +63,7 @@ resources:
    type: org.cloudfoundry.managed-service
    parameters:
       service: xsuaa
+      path: ./xs-security.json
       service-plan: application
       config:
          xsappname: spacetravel-uaa-${space}
