@@ -1,37 +1,53 @@
 package com.sap.cloudsamples.spaceflight.objectstore;
 
+import com.sap.cloud.sdk.cloudplatform.ScpCfCloudPlatform;
+
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStoreContext;
-
-
-
+import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
-
+ * 
  * This is AWS Credentials Configuration class
-
  *
-
+ * 
+ * 
  */
-
 
 public class AmazonWebServiceConfiguration {
 
-	
+	private static final Logger logger = LoggerFactory.getLogger(AmazonWebServiceConfiguration.class);
+	private String accessKeyId;
 
-	private String accessKeyId = new String ("AKIA5PG4DDJPXZGDLWHM");
+	private String bucket;
 
-	private String bucket  = new String ("hcp-b41901d4-7bfc-4829-a6af-a2fee94cb8fb");
+	private String secretAccessKey;
 
-	private String secretAccessKey  = new String ("9TjQV/aGBbiSMKwIxrkC4xOQr9y9oq8mOiWw40gK");
+	public AmazonWebServiceConfiguration() {
+		logger.info("AWS Credential Start bucket");
+		ScpCfCloudPlatform scpService = new ScpCfCloudPlatform();
+		JsonObject jsonObj = scpService.getServiceCredentials("objectstore");
+		logger.info("AWS Credential:  " + jsonObj.toString());
+		if (jsonObj.has("bucket")) {
+			this.bucket = jsonObj.get("bucket").getAsString();
+		}
+		if (jsonObj.has("access_key_id")) {
+			this.accessKeyId = jsonObj.get("access_key_id").getAsString();
+		}
+		if (jsonObj.has("secret_access_key")) {
+			this.secretAccessKey = jsonObj.get("secret_access_key").getAsString();
 
-	AmazonWebServiceConfiguration(){
-		
+		}
+		logger.info("AWS Credential: bucket: " + this.bucket);
+		logger.info("AWS Credential: accessKeyId: " + this.accessKeyId);
+		logger.info("AWS Credential: secretAccessKey: " + this.secretAccessKey);
 	}
 
 	public String getAccessKeyId() {
 
-		return accessKeyId;
+		return this.accessKeyId;
 
 	}
 
@@ -43,7 +59,7 @@ public class AmazonWebServiceConfiguration {
 
 	public String getBucket() {
 
-		return bucket;
+		return this.bucket;
 
 	}
 
@@ -55,7 +71,7 @@ public class AmazonWebServiceConfiguration {
 
 	public String getSecretAccessKey() {
 
-		return secretAccessKey;
+		return this.secretAccessKey;
 
 	}
 
@@ -65,22 +81,17 @@ public class AmazonWebServiceConfiguration {
 
 	}
 
-
-
 	/**
-
+	 * 
 	 * @return blobStoreContext
-
+	 * 
 	 */
 
 	public BlobStoreContext getBlobStoreContext() {
 
-		return ContextBuilder.newBuilder("aws-s3")
-				.credentials(this.getAccessKeyId(), this.getSecretAccessKey())
+		return ContextBuilder.newBuilder("aws-s3").credentials(this.getAccessKeyId(), this.getSecretAccessKey())
 				.buildView(BlobStoreContext.class);
 
 	}
-
-	
 
 }
