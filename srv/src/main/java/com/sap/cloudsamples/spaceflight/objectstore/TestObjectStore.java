@@ -40,6 +40,7 @@ public class TestObjectStore extends HttpServlet  {
 	
 	private void uploadDocument(String fileName) {
 		AdobeService adbService = new AdobeService();
+<<<<<<< Upstream, based on origin/s4bp-final
 		logger.error("Get Adobe Content");
 		byte[] bytes = adbService.getFileContent(fileName);
 		logger.error("After Adobe Content" + bytes.toString());
@@ -49,6 +50,17 @@ public class TestObjectStore extends HttpServlet  {
 		logger.error("After AWS Connection" );
 		String result = objService.uploadFile(bytes, fileName, "application/pdf");
 		logger.error("After AWS Upload"+result);
+=======
+		logger.info("Get Adobe Content");
+		byte[] bytes = adbService.getFileContent(fileName);
+		logger.info("After Adobe Content" + bytes.toString());
+		ObjectStoreRepository repository =  new ObjectStoreRepository();
+		logger.info("Before AWS Connection" );
+		ObjectStoreService objService = new AWSObjectStoreService(repository);
+		logger.info("After AWS Connection" );
+		String result = objService.uploadFile(bytes, fileName, "application/pdf");
+		logger.info("After AWS Upload"+result);
+>>>>>>> 599e952 Object Store Upload
 	}
 	
 
