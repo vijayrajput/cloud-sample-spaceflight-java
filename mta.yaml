@@ -10,6 +10,7 @@ modules:
      memory: 256M
    requires:
      - name: spacetravel-hana
+     - name: spaceflight-applogs
 
  - name: srv
    type: java
@@ -29,6 +30,8 @@ modules:
             {"service_name_for_DefaultDB" : "~{hdi-container-name}"}]'
     - name: spacetravel-dest
     - name: spacetravel-uaa
+    - name: S3-ObjectStore
+    - name: spaceflight-applogs
 
  - name: spacetravel-app
    type: html5
@@ -39,6 +42,7 @@ modules:
       builder: grunt
    requires:
     - name: spacetravel-uaa
+    - name: spaceflight-applogs
     - name: srv_api
       group: destinations
       properties:
@@ -58,13 +62,17 @@ resources:
    parameters:
       service: destination
       service-plan: lite
-
+      service-name: spacetravel-dest
+      
+ - name: S3-ObjectStore      
+ - name: spaceflight-applogs
  - name: spacetravel-uaa
    type: org.cloudfoundry.managed-service
    parameters:
       service: xsuaa
       path: ./xs-security.json
       service-plan: application
+      service-name: spacetravel-uaa
       config:
          xsappname: spacetravel-uaa-${space}
          tenant-mode: dedicated
