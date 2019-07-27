@@ -69,8 +69,14 @@ public class TestObjectStore extends HttpServlet  {
 	private void uploadDocument(String fileName) {
 		AdobeService adbService = new AdobeService();
 		logger.info("Get Adobe Content");
-		byte[] bytes = adbService.getFileContent(fileName);
-		logger.info("After Adobe Content" + bytes.toString());
+		byte[] bytes = null;
+		try {
+			bytes = adbService.getFileContent(fileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		ObjectStoreRepository repository =  new ObjectStoreRepository();
 		logger.info("Before AWS Connection" );
 		ObjectStoreService objService = new AWSObjectStoreService(repository);

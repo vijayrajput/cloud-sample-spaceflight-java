@@ -1,5 +1,6 @@
 package com.sap.cloudsamples.spaceflight;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -154,7 +155,13 @@ public class BookingsHandler {
 	private void uploadDocument(String fileName) {
 		AdobeService adbService = new AdobeService();
 		logger.error("Get Adobe Content");
-		byte[] bytes = adbService.getFileContent(fileName);
+		byte[] bytes = null;
+		try {
+			bytes = adbService.getFileContent(fileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		logger.error("After Adobe Content" + bytes.toString());
 		ObjectStoreRepository repository =  new ObjectStoreRepository();
 		logger.error("Before AWS Connection" );
