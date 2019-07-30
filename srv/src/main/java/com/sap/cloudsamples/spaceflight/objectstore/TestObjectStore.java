@@ -44,7 +44,9 @@ public class TestObjectStore extends HttpServlet  {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//parseService.getBodyfromRequest(request);
-		String fileName = new String(FILE_NAME);
+		String fileName = request.getParameter("order");
+		
+	//	String fileName = new String(FILE_NAME);
 		ObjectStoreRepository repository =  new ObjectStoreRepository();
 		logger.info("Before AWS Connection" );
 		ObjectStoreService objService = new AWSObjectStoreService(repository);

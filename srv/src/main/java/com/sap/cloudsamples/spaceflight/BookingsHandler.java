@@ -10,7 +10,6 @@ import com.sap.cloud.sdk.service.prov.api.DataSourceHandler;
 import com.sap.cloud.sdk.service.prov.api.EntityData;
 import com.sap.cloud.sdk.service.prov.api.EntityDataBuilder;
 import com.sap.cloud.sdk.service.prov.api.ExtensionHelper;
-import com.sap.cloud.sdk.service.prov.api.annotations.AfterRead;
 import com.sap.cloud.sdk.service.prov.api.annotations.BeforeCreate;
 import com.sap.cloud.sdk.service.prov.api.annotations.BeforeUpdate;
 import com.sap.cloud.sdk.service.prov.api.exception.DatasourceException;
@@ -20,12 +19,9 @@ import com.sap.cloud.sdk.service.prov.api.exits.PreExtensionResponseBuilderWithB
 import com.sap.cloud.sdk.service.prov.api.exits.PreExtensionResponseImpl;
 import com.sap.cloud.sdk.service.prov.api.exits.PreExtensionResponseWithBody;
 import com.sap.cloud.sdk.service.prov.api.request.CreateRequest;
-import com.sap.cloud.sdk.service.prov.api.request.ReadRequest;
 import com.sap.cloud.sdk.service.prov.api.request.UpdateRequest;
 import com.sap.cloud.sdk.service.prov.api.response.ErrorResponse;
 import com.sap.cloud.sdk.service.prov.api.response.ErrorResponseBuilder;
-import com.sap.cloud.sdk.service.prov.api.response.ReadResponse;
-import com.sap.cloud.sdk.service.prov.api.response.ReadResponseAccessor;
 import com.sap.cloudsamples.spaceflight.adobe.AdobeService;
 import com.sap.cloudsamples.spaceflight.objectstore.AWSObjectStoreService;
 import com.sap.cloudsamples.spaceflight.objectstore.ObjectStoreRepository;
@@ -44,13 +40,9 @@ public class BookingsHandler {
 	private static final Logger logger = LoggerFactory.getLogger(BookingsHandler.class);
 
 	static final String BOOKING_SERVICE = "BookingService";
-	private static final String PROPERTY_ID = "ID";
-
 	private static final String ENTITY_BOOKINGS = "Bookings";
 
-	private static final String ENTITY_ITINERARIES = BOOKING_SERVICE + ".Itineraries";
 	private static final String PROPERTY_BOOKING_BOOKINGNO = "BookingNo";
-	private static final String PROPERTY_BOOKING_ITINERARYID = "Itinerary_ID";
 	private static final String PROPERTY_BOOKING_CUSTOMERID = "Customer_ID";
 
 	/**
@@ -70,24 +62,31 @@ public class BookingsHandler {
 			throws ODataException, DatasourceException {
 		return beforeUpsert(req.getData(), helper.getHandler(), false);
 	}
-	
-		@AfterRead(entity = "Bookings", serviceName = "BookingService")
-	public ReadResponse afterReadBookings(ReadRequest req, ReadResponseAccessor res, ExtensionHelper helper) {
-		//EntityData data = res.getEntityData();
-		//TODO: add your custom logic / validations here...
-		String no = DateTimeFormatter.BASIC_ISO_DATE.format(LocalDate.now()); // e.g. 20180810
-		no += "/" + RandomStringUtils.randomAlphanumeric(5).toUpperCase(Locale.ENGLISH); // short random string
-		try{
-		uploadDocument(no);
+
+//	@AfterRead(entity = "Bookings", serviceName = "BookingService")
+//	public ReadResponse afterReadBookings(ReadRequest req, ReadResponseAccessor res, ExtensionHelper helper) {
+		// EntityData data = res.getEntityData();
+		// TODO: add your custom logic / validations here...
+
+	/*	User currentUser = UserAccessor.getCurrentUser();
+		logger.error("Current UserId" + currentUser.getName());
+		Set<Authorization> auths = currentUser.getAuthorizations();
+
+		Iterator<Authorization> itr = auths.iterator();
+
+		while (itr.hasNext()) {
+			logger.error("Current Autorisation" + itr.next().getName());
 		}
-		catch (Exception Ex) {
-			System.out.println("Dcument Upload Exception: "+Ex.getMessage());
-			logger.error("Dcument Upload Exception: "+ Ex.getStackTrace().toString());
-		}
-		return res.getOriginalResponse(); //use this API if no change is required and the original response can be returned as output.
-		//return ReadResponse.setSuccess().setData(data).response(); //use this API if the payload is modified.
-		//return ReadResponse.setError(ErrorResponse.getBuilder().setMessage("Read Operation Failed").response()); //use this API if should return error response.
-	}
+		*/
+//		return res.getOriginalResponse(); // use this API if no change is required and the original response can be
+											// returned as output.
+		// return ReadResponse.setSuccess().setData(data).response(); //use this API if
+		// the payload is modified.
+		// return ReadResponse.setError(ErrorResponse.getBuilder().setMessage("Read
+		// Operation Failed").response()); //use this API if should return error
+		// response.
+	//}
+
 	/**
 	 * Handles BeforeCreate and BeforeUpdate of Bookings
 	 */
@@ -142,19 +141,18 @@ public class BookingsHandler {
 	private String computeBookingNumber() {
 		String no = DateTimeFormatter.BASIC_ISO_DATE.format(LocalDate.now()); // e.g. 20180810
 		no += "/" + RandomStringUtils.randomAlphanumeric(5).toUpperCase(Locale.ENGLISH); // short random string
-		try{
-		uploadDocument(no);
-		}
-		catch (Exception Ex) {
-			System.out.println("Dcument Upload Exception: "+Ex.getMessage());
-			logger.error("Dcument Upload Exception: "+ Ex.getStackTrace().toString());
+		try {
+			uploadDocument(no);
+		} catch (Exception Ex) {
+			System.out.println("Dcument Upload Exception: " + Ex.getMessage());
+			logger.error("Dcument Upload Exception: " + Ex.getMessage());
 		}
 		return no;
 	}
-	
+
 	private void uploadDocument(String fileName) {
 		AdobeService adbService = new AdobeService();
-		logger.error("Get Adobe Content");
+		logger.info("Get Adobe Content");
 		byte[] bytes = null;
 		try {
 			bytes = adbService.getFileContent(fileName);
@@ -162,13 +160,13 @@ public class BookingsHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		logger.error("After Adobe Content" + bytes.toString());
-		ObjectStoreRepository repository =  new ObjectStoreRepository();
-		logger.error("Before AWS Connection" );
+
+		ObjectStoreRepository repository = new ObjectStoreRepository();
+		logger.info("Before AWS Connection");
 		ObjectStoreService objService = new AWSObjectStoreService(repository);
-		logger.error("After AWS Connection" );
+		logger.info("After AWS Connection");
 		String result = objService.uploadFile(bytes, fileName, "application/pdf");
-		logger.error("After AWS Upload"+result);
+		logger.info("After AWS Upload" + result);
 	}
 
 }

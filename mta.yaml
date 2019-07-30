@@ -1,6 +1,6 @@
 _schema-version: 2.0.0
 ID: spacetravel
-version: 5.0.0
+version: 6.0.0
 modules:
   - name: spacetravel-db
     type: hdb
@@ -9,6 +9,7 @@ modules:
       memory: 256M
     requires:
       - name: spacetravel-hana
+      - name: spaceflight-applogs
   - name: spacetravel-srv
     type: java
     path: srv
@@ -37,6 +38,7 @@ modules:
       builder: grunt
     requires:
       - name: spacetravel-uaa
+      - name: spaceflight-applogs
       - name: srv_api
         group: destinations
         properties:
