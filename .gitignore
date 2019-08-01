@@ -22,3 +22,5 @@ connection.properties
 metadata.xml
 .cds_gen.log
 default-env.json
+
+/mta_archives/spacetravel_6.0.0.mtar
