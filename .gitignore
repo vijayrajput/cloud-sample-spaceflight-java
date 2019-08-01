@@ -10,7 +10,8 @@ srv/.settings/org.eclipse.m2e.*
 srv/.settings/org.eclipse.wst.*
 .xmake/
 srv/src/main/resources/edmx/
-gen/
+db/src/gen/
+/gen/
 imports/
 node/
 node_modules/
@@ -23,4 +24,5 @@ metadata.xml
 .cds_gen.log
 default-env.json
 
-/mta_archives/spacetravel_6.0.0.mtar
+/mta_archives/
+

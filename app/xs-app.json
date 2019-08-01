@@ -1,12 +1,17 @@
 {
   "welcomeFile": "/app/test/flpSandbox.html",
-  "authenticationMethod": "none",
   "logout": {
     "logoutEndpoint": "/do/logout"
   },
   "routes": [
     {
       "source": "/odata/v2",
+      "authenticationType": "xsuaa",
+      "destination": "srv_api",
+      "csrfProtection": false
+    },
+    {
+      "source": "/testds",
       "authenticationType": "none",
       "destination": "srv_api",
       "csrfProtection": false
