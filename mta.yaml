@@ -1,6 +1,6 @@
 _schema-version: 2.0.0
 ID: spacetravel
-version: 6.0.0
+version: 7.0.0
 modules:
   - name: spacetravel-db
     type: hdb
