@@ -179,7 +179,7 @@ If this is the first logon with this user, you need to accept the terms of use f
 If you don't get to see this screen, this was already done for this user.
 
 ### 8. Setup Mock Server for SAP S/4HANA
-In case you do not have access to a live SAP S/4HANA system, there is a server that mocks the relevant OData APIs.  Follow [these instructions](MockServer/README.md) to set it up.
+In case you do not have access to a live SAP S/4HANA system, there is a server that mocks the relevant OData APIs.  Follow [these instructions](-exercises-/03-ConnectService/MockServer/README.md) to set it up.
 
 ### 9. Switch to a different start branch
 
