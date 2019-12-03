@@ -179,17 +179,17 @@ If this is the first logon with this user, you need to accept the terms of use f
 If you don't get to see this screen, this was already done for this user.
 
 ### 8. Setup Mock Server for SAP S/4HANA
-In case you do not have access to a live SAP S/4HANA system, there is a server that mocks the relevant OData APIs.  Follow [these instructions](-exercises-/03-ConnectService/MockServer/README.md) to set it up.
+In case you do not have access to a live SAP S/4HANA system, there is a server that mocks the relevant OData APIs.  Follow [these instructions](MockServer/README.md) to set it up.
 
 ### 9. Switch to a different start branch
 
 For this exercise you have to **switch to another code branch** of the Git repository.
 
 In the Web IDE Git pane click the `+` icon:
-<p align="center"><img width="420" src="res/pic301.png" alt="Create local branch"> </p>
+<p align="center"><img width="420" src="res/pic301_3.png" alt="Create local branch"> </p>
 
 As source branch select `origin/s4bp-start`.  The name of the local branch is suggested automatically.  Click `Ok`.
-<p align="center"><img width="420" src="res/pic302.png" alt="Select source branch"> </p>
+<p align="center"><img width="420" src="res/pic302_3.png" alt="Select source branch"> </p>
 
 The file explorer always shows the currently active branch:
 <p align="center"><img width="330" src="res/pic303a.png" alt="Branch name in explorer"> </p>
@@ -197,7 +197,7 @@ The file explorer always shows the currently active branch:
 ### 10. Import S/4HANA service
 
 10.1. On the `srv` folder select `New` > `Data Model from External Service` from the context menu:
-   <p align="center"><img width="480" src="res/pic306.png" alt="Data model from external service"> </p>
+   <p align="center"><img width="480" src="res/pic306_3.png" alt="Data model from external service"> </p>
 
 10.2. In the wizard, select `SAP API Business Hub` and enter `business partner` into the search field. If you are asked to logon to API Business Hub, enter your credentials. Select the API `OData Service for Business Partner`and then press `Next`.
    <p align="center"><img width="640" src="res/pic308b.png" alt="Select the model file"> </p>
@@ -358,3 +358,23 @@ The file explorer always shows the currently active branch:
 14.4. **Check that this S/4 customer has been persisted (cached) in the database**
 
    <p align="center"><img width="700" src="res/pic335.png" alt="Query Customers entity"> </p>
+   
+### 15. Connect CF Application to Adobe Service
+
+15.1 Expose Adobe Service from Neo environment as OAuth Authentication Mechanism
+  
+    <p align="center"><img width="700" src="res/OAuth_Neo.PNG" > </p>
+
+15.2  Create Destination in CF Sub-Account to Abobe service in Neo
+
+ <p align="center"><img width="700" src="res/OAuthDestination.PNG" > </p>
+ 
+15.3 Create [AdobeService](/srv/src/main/java/com/sap/cloudsamples/spaceflight/adobe/AdobeService.java) Class to call Adobe API's
+Abode API help can be found here in [SAP Help](https://help.sap.com/viewer/6d3eac5a9e3144a7b43932a1078c7628/Cloud/en-US/3f4f7318d8c941308696512c2125424e.html)
+
+Adobe Connect is made using Cloud SDK API's - [Destination API](https://help.sap.com/doc/a7234bc9e7bf43c08c8652cdf5b7e160/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/Destination.html) 	
+ 
+ 
+
+ 
+   
