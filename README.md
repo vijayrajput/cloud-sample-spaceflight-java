@@ -363,7 +363,7 @@ The file explorer always shows the currently active branch:
 
 15.1 Expose Adobe Service from Neo environment as OAuth Authentication Mechanism
   
-    <p align="center"><img width="700" src="res/OAuth_Neo.PNG" > </p>
+ <p align="center"><img width="700" src="res/OAuth_Neo.PNG" > </p>
 
 15.2  Create Destination in CF Sub-Account to Abobe service in Neo
 
