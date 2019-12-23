@@ -370,11 +370,33 @@ The file explorer always shows the currently active branch:
  <p align="center"><img width="700" src="res/OAuthDestination.PNG" > </p>
  
 15.3 Create [AdobeService](/srv/src/main/java/com/sap/cloudsamples/spaceflight/adobe/AdobeService.java) Class to call Adobe API's
+
+Cloud SDK API's can be used to get connection details from destination service 
+```
+		Destination destination = DestinationAccessor.getDestination(AdobeDestination.DESTINATION_NAME);
+		this.destProperties = destination.getPropertiesByName();
+```		
 Abode API help can be found here in [SAP Help](https://help.sap.com/viewer/6d3eac5a9e3144a7b43932a1078c7628/Cloud/en-US/3f4f7318d8c941308696512c2125424e.html)
 
 Adobe Connect is made using Cloud SDK API's - [Destination API](https://help.sap.com/doc/a7234bc9e7bf43c08c8652cdf5b7e160/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/Destination.html) 	
  
  
+### 16. Store document to object Store service
+ - object store configuration can be read dynamically by the Java program using Cloud SDK Class - `ScpCfCloudPlatform` from connected object store intance
+ - Connection detail can be found in class [AmazonWebServiceConfiguration](/srv/src/main/java/com/sap/cloudsamples/spaceflight/objectstore/AmazonWebServiceConfiguration.java)
+```
+		ScpCfCloudPlatform scpService = new ScpCfCloudPlatform();
+		JsonObject jsonObj = scpService.getServiceCredentials("objectstore");
+		if (jsonObj.has("bucket")) {
+			this.bucket = jsonObj.get("bucket").getAsString();
+		}
+		if (jsonObj.has("access_key_id")) {
+			this.accessKeyId = jsonObj.get("access_key_id").getAsString();
+		}
+		if (jsonObj.has("secret_access_key")) {
+			this.secretAccessKey = jsonObj.get("secret_access_key").getAsString();
 
- 
+		}
+```
+Details for AWS s3 based object store documentation can be found in [SAP Help](https://help.sap.com/viewer/2ee77ef7ea4648f9ab2c54ee3aef0a29/Cloud/en-US/4236b942f67349d5a583773162d99660.html)
    
